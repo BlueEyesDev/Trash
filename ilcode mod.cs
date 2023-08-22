@@ -1,3 +1,57 @@
+//code C#
+
+if (!File.Exists("TwitchMod.txt"))
+	File.Create("TwitchMod.txt");
+string[] array = File.ReadAllLines("TwitchMod.txt");
+if (array.Length != 0) {
+	string text = array[0];
+	string[] array2 = new string[array.Length - 1];
+	Array.Copy(array, 1, array2, 0, array2.Length);
+	File.WriteAllLines("TwitchMod.txt", array2);
+	string[] array3 = text.Split('|');
+	if (array3[1] == "item") {
+		ErrorMessage.AddDebug($"The Viewer : {array3[0]} add {array3[2]} in your inventory");
+		DevConsole.SendConsoleCommand(array3[1] + " " + array3[2]);
+		return;
+	}
+	if (array3[1] == "spawn") {
+		ErrorMessage.AddDebug($"The Viewer : {array3[0]} Spawn {array3[2]} enemy for you ! good luck !");
+		DevConsole.SendConsoleCommand(array3[1] + " " + array3[2]);
+		return;
+	}
+	if (array3[1] == "malus") {
+		if (array3[2] == "horde") {
+			ErrorMessage.AddDebug($"The Viewer : {array3[0]}  start HORDE ! good luck !");
+			for (int i = 0; i < 25; i++) {
+					DevConsole.SendConsoleCommand("spawn squidshark");
+					DevConsole.SendConsoleCommand("spawn chelicerate");
+					DevConsole.SendConsoleCommand("spawn shadowleviathan");
+					DevConsole.SendConsoleCommand("spawn cryptosuchus");
+			}
+			return;
+		}
+		if (array3[2] == "kill") {
+			DevConsole.SendConsoleCommand("spawn beacon");
+			ErrorMessage.AddDebug($"The Viewer : {array3[0]}  gives you a penalty {array3[2]} ! Bad Viewer !!!");
+			DevConsole.SendConsoleCommand("kill");
+			return;
+		}
+		DevConsole.SendConsoleCommand(array3[2]);
+		ErrorMessage.AddDebug($"The Viewer : {array3[0]}  gives you a penalty {array3[2]} ! Bad Viewer !!!");
+			return;
+	} else if (array3[1] == "bonus") {
+		if (array3[2] == "charge")
+			DevConsole.SendConsoleCommand(array3[2] + " 100");
+		else
+			DevConsole.SendConsoleCommand(array3[2]);
+		
+		ErrorMessage.AddDebug($"The Viewer : {array3[0]} gives you a Bonus {array3[2]} !  Best Viewer !!!");
+	}
+}
+
+
+//ILCODE
+
 IL_017D: ldstr     "TwitchMod.txt"
 IL_0182: call      bool [mscorlib]System.IO.File::Exists(string)
 IL_0187: brtrue.s  IL_0194
